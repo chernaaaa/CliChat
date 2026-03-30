@@ -1,5 +1,6 @@
 plugins {
     id("java")
+    checkstyle
 }
 
 group = "org.example"
@@ -17,4 +18,8 @@ dependencies {
 
 tasks.test {
     useJUnitPlatform()
+}
+
+checkstyle {
+    toolVersion = "10.21.1"
 }

@@ -24,7 +24,7 @@ jobs:
           java-version: "21"
           cache: gradle
 
-      - name: Build and test
+      - name: Checkstyle, build and test
         run: |
           chmod +x gradlew
           ./gradlew build --no-daemon
