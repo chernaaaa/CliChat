@@ -1,17 +1,51 @@
 package ru.hse.clichat;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
-public class Main {
-    public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+import ru.hse.clichat.cli.CommandLineArgs;
+import ru.hse.clichat.cli.ConsoleInterface;
+import ru.hse.clichat.network.ChatClient;
+import ru.hse.clichat.network.ChatServer;
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i = " + i);
+import java.io.IOException;
+
+public class Main {
+    private static final int DEFAULT_SERVER_PORT = 8080;
+
+    public static void main(String[] args) {
+        try {
+            CommandLineArgs parsedArgs = CommandLineArgs.parse(args);
+            ConsoleInterface consoleUi = new ConsoleInterface();
+
+            if (parsedArgs.isServer()) {
+                // Режим сервера
+                ChatServer server = new ChatServer(DEFAULT_SERVER_PORT, parsedArgs.getUsername(), consoleUi);
+                consoleUi.setChatNode(server);
+                
+                server.start();
+                consoleUi.startReading();
+                
+                Thread.currentThread().join();
+            } else {
+                // Режим клиента
+                ChatClient client = new ChatClient(
+                        parsedArgs.getPeerHost(), 
+                        parsedArgs.getPeerPort(), 
+                        parsedArgs.getUsername(), 
+                        consoleUi
+                );
+                consoleUi.setChatNode(client);
+                
+                client.connect();
+                consoleUi.startReading();
+                
+                Thread.currentThread().join();
+            }
+        } catch (IllegalArgumentException e) {
+            System.err.println("Ошибка аргументов: " + e.getMessage());
+            System.err.println("Использование:");
+            System.err.println("  Как сервер: java -jar app.jar --username <Имя>");
+            System.err.println("  Как клиент: java -jar app.jar --username <Имя> --peer <IP> --port <Порт>");
+        } catch (IOException | InterruptedException e) {
+            System.err.println("Критическая ошибка: " + e.getMessage());
         }
     }
 }
