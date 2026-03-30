@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package clichat;
+
+option java_multiple_files = true;
+option java_package = "ru.hse.clichat.grpc";
+option java_outer_classname = "ChatProto";
+
+// Сервис для P2P чата
+service ChatService {
+    // Двунаправленный стриминг: оба узла могут отправлять и получать сообщения
+    rpc ChatStream (stream ChatMessage) returns (stream ChatMessage);
+}
+
+// Структура сообщения
+message ChatMessage {
+    string sender_name = 1;
+    int64 timestamp = 2; // Unix timestamp
+    string text = 3;
+}
