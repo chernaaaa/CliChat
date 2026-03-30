@@ -7,6 +7,20 @@ import ru.hse.clichat.network.ChatServer;
 
 import java.io.IOException;
 
+/**
+ * Главный класс P2P чата.
+ * Точка входа в приложение, которая парсит аргументы командной строки
+ * и запускает либо сервер, либо клиент в зависимости от переданных параметров.
+ * 
+ * <p>Примеры использования:
+ * <pre>
+ * # Запуск в режиме сервера (ожидание подключений)
+ * java -jar clichat.jar --username Alice
+ * 
+ * # Запуск в режиме клиента (подключение к серверу)
+ * java -jar clichat.jar --username Bob --peer localhost --port 8080
+ * </pre>
+ */
 public class Main {
     private static final int DEFAULT_SERVER_PORT = 8080;
 

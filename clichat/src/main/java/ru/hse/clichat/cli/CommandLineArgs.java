@@ -1,5 +1,17 @@
 package ru.hse.clichat.cli;
 
+/**
+ * Класс для хранения и парсинга аргументов командной строки.
+ * 
+ * <p>Поддерживаемые аргументы:
+ * <ul>
+ *   <li>--username: имя пользователя (обязательно)</li>
+ *   <li>--peer: адрес сервера для подключения (опционально)</li>
+ *   <li>--port: порт сервера (опционально)</li>
+ * </ul>
+ * 
+ * <p>Если peer и port не указаны, приложение работает в режиме сервера.
+ */
 public class CommandLineArgs {
     private final String username;
     private final String peerHost;
@@ -15,10 +27,23 @@ public class CommandLineArgs {
     public String getPeerHost() { return peerHost; }
     public Integer getPeerPort() { return peerPort; }
 
+    /**
+     * Проверяет, должно ли приложение работать в режиме сервера.
+     *
+     * @return true если peer или port не указаны, false - для режима клиента
+     */
     public boolean isServer() {
         return peerHost == null || peerPort == null;
     }
 
+    /**
+     * Парсит аргументы командной строки.
+     *
+     * @param args массив аргументов командной строки
+     * @return объект CommandLineArgs с распарсенными значениями
+     * @throws IllegalArgumentException если не указано имя пользователя
+     * @throws NumberFormatException если порт указан в неверном формате
+     */
     public static CommandLineArgs parse(String[] args) {
         String username = null;
         String peerHost = null;
